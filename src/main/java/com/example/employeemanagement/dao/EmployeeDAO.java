@@ -3,6 +3,7 @@ package com.example.employeemanagement.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,22 +35,28 @@ public class EmployeeDAO {
                 employees.add(employee);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error while fetching employees: "
+                    + e.getMessage()
+            );
         }
 
         return employees;
     }
 
+
     // Add new employee
     public boolean addEmployee(Employee employee) {
 
-        String sql = "INSERT INTO employee " +
-                     "(name, email, department, salary) " +
-                     "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO employee "
+                   + "(name, email, department, salary) "
+                   + "VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setString(1, employee.getName());
             statement.setString(2, employee.getEmail());
@@ -60,21 +67,28 @@ public class EmployeeDAO {
 
             return rowsInserted > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error while adding employee: "
+                    + e.getMessage()
+            );
+
             return false;
         }
     }
 
+
     // Update employee
     public boolean updateEmployee(Employee employee) {
 
-        String sql = "UPDATE employee " +
-                     "SET name = ?, email = ?, department = ?, salary = ? " +
-                     "WHERE id = ?";
+        String sql = "UPDATE employee "
+                   + "SET name = ?, email = ?, department = ?, salary = ? "
+                   + "WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setString(1, employee.getName());
             statement.setString(2, employee.getEmail());
@@ -86,19 +100,26 @@ public class EmployeeDAO {
 
             return rowsUpdated > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error while updating employee: "
+                    + e.getMessage()
+            );
+
             return false;
         }
     }
-    
- // Delete employee
+
+
+    // Delete employee
     public boolean deleteEmployee(int id) {
 
         String sql = "DELETE FROM employee WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
 
@@ -106,8 +127,13 @@ public class EmployeeDAO {
 
             return rowsDeleted > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error while deleting employee: "
+                    + e.getMessage()
+            );
+
             return false;
         }
     }
