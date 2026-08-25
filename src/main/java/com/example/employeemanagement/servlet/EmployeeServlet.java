@@ -24,7 +24,6 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
         employeeDAO = new EmployeeDAO();
     }
 
@@ -49,10 +48,23 @@ public class EmployeeServlet extends HttpServlet {
             for (Employee employee : employees) {
 
                 if (employee.getId() == id) {
-
                     selectedEmployee = employee;
                     break;
                 }
+            }
+
+            if (selectedEmployee == null) {
+
+                request.getSession().setAttribute(
+                        "success",
+                        "Employee not found."
+                );
+
+                response.sendRedirect(
+                        request.getContextPath() + "/employees"
+                );
+
+                return;
             }
 
             request.setAttribute(
@@ -78,7 +90,8 @@ public class EmployeeServlet extends HttpServlet {
             );
 
             response.sendRedirect(
-                    request.getContextPath() + "/employees");
+                    request.getContextPath() + "/employees"
+            );
 
         // Display Employees
         } else {
@@ -111,9 +124,54 @@ public class EmployeeServlet extends HttpServlet {
                 request.getParameter("department");
 
         /*
+         * NAME VALIDATION
+         */
+        if (name == null || name.trim().isEmpty()) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid name. Name cannot be empty."
+            );
+
+            return;
+        }
+
+        name = name.trim();
+
+        if (!name.matches("[A-Za-z ]+")) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid name. Name should contain only letters and spaces."
+            );
+
+            return;
+        }
+
+        /*
+         * DEPARTMENT VALIDATION
+         */
+        if (department == null ||
+                department.trim().isEmpty()) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid department. Department cannot be empty."
+            );
+
+            return;
+        }
+
+        department = department.trim();
+
+        /*
          * EMAIL VALIDATION
          */
-        if (email == null || email.trim().isEmpty()) {
+        if (email == null ||
+                email.trim().isEmpty()) {
 
             showError(
                     request,
@@ -215,13 +273,14 @@ public class EmployeeServlet extends HttpServlet {
         }
 
         response.sendRedirect(
-                request.getContextPath() + "/employees");
+                request.getContextPath() + "/employees"
+        );
     }
 
     // Display validation error
     private void showError(HttpServletRequest request,
-                            HttpServletResponse response,
-                            String message)
+                           HttpServletResponse response,
+                           String message)
             throws ServletException, IOException {
 
         request.setAttribute(
