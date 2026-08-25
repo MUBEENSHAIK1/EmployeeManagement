@@ -27,12 +27,37 @@ public class EmployeeServlet extends HttpServlet {
                           HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Employee> employees = employeeDAO.getAllEmployees();
+        String action = request.getParameter("action");
 
-        request.setAttribute("employees", employees);
+        if ("edit".equals(action)) {
 
-        request.getRequestDispatcher("/WEB-INF/views/employees.jsp")
-               .forward(request, response);
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            List<Employee> employees = employeeDAO.getAllEmployees();
+
+            Employee selectedEmployee = null;
+
+            for (Employee employee : employees) {
+                if (employee.getId() == id) {
+                    selectedEmployee = employee;
+                    break;
+                }
+            }
+
+            request.setAttribute("employee", selectedEmployee);
+
+            request.getRequestDispatcher("/WEB-INF/views/edit-employee.jsp")
+                   .forward(request, response);
+
+        } else {
+
+            List<Employee> employees = employeeDAO.getAllEmployees();
+
+            request.setAttribute("employees", employees);
+
+            request.getRequestDispatcher("/WEB-INF/views/employees.jsp")
+                   .forward(request, response);
+        }
     }
 
     @Override
@@ -40,19 +65,42 @@ public class EmployeeServlet extends HttpServlet {
                            HttpServletResponse response)
             throws ServletException, IOException {
 
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String department = request.getParameter("department");
-        double salary = Double.parseDouble(request.getParameter("salary"));
+        String action = request.getParameter("action");
 
-        Employee employee = new Employee();
+        if ("update".equals(action)) {
 
-        employee.setName(name);
-        employee.setEmail(email);
-        employee.setDepartment(department);
-        employee.setSalary(salary);
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            String email = request.getParameter("email");
+            String department = request.getParameter("department");
+            double salary = Double.parseDouble(request.getParameter("salary"));
 
-        employeeDAO.addEmployee(employee);
+            Employee employee = new Employee();
+
+            employee.setId(id);
+            employee.setName(name);
+            employee.setEmail(email);
+            employee.setDepartment(department);
+            employee.setSalary(salary);
+
+            employeeDAO.updateEmployee(employee);
+
+        } else {
+
+            String name = request.getParameter("name");
+            String email = request.getParameter("email");
+            String department = request.getParameter("department");
+            double salary = Double.parseDouble(request.getParameter("salary"));
+
+            Employee employee = new Employee();
+
+            employee.setName(name);
+            employee.setEmail(email);
+            employee.setDepartment(department);
+            employee.setSalary(salary);
+
+            employeeDAO.addEmployee(employee);
+        }
 
         response.sendRedirect(request.getContextPath() + "/employees");
     }

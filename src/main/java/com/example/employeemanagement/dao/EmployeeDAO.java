@@ -65,4 +65,30 @@ public class EmployeeDAO {
             return false;
         }
     }
+
+    // Update employee
+    public boolean updateEmployee(Employee employee) {
+
+        String sql = "UPDATE employee " +
+                     "SET name = ?, email = ?, department = ?, salary = ? " +
+                     "WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getEmail());
+            statement.setString(3, employee.getDepartment());
+            statement.setDouble(4, employee.getSalary());
+            statement.setInt(5, employee.getId());
+
+            int rowsUpdated = statement.executeUpdate();
+
+            return rowsUpdated > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
