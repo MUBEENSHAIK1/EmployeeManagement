@@ -2,6 +2,7 @@ package com.example.employeemanagement.servlet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,8 +18,13 @@ public class EmployeeServlet extends HttpServlet {
 
     private EmployeeDAO employeeDAO;
 
+    // Email validation pattern
+    private static final String EMAIL_PATTERN =
+            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
     @Override
     public void init() throws ServletException {
+
         employeeDAO = new EmployeeDAO();
     }
 
@@ -32,21 +38,27 @@ public class EmployeeServlet extends HttpServlet {
         // Edit Employee
         if ("edit".equals(action)) {
 
-            int id = Integer.parseInt(request.getParameter("id"));
+            int id = Integer.parseInt(
+                    request.getParameter("id"));
 
-            List<Employee> employees = employeeDAO.getAllEmployees();
+            List<Employee> employees =
+                    employeeDAO.getAllEmployees();
 
             Employee selectedEmployee = null;
 
             for (Employee employee : employees) {
 
                 if (employee.getId() == id) {
+
                     selectedEmployee = employee;
                     break;
                 }
             }
 
-            request.setAttribute("employee", selectedEmployee);
+            request.setAttribute(
+                    "employee",
+                    selectedEmployee
+            );
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/edit-employee.jsp")
@@ -55,9 +67,15 @@ public class EmployeeServlet extends HttpServlet {
         // Delete Employee
         } else if ("delete".equals(action)) {
 
-            int id = Integer.parseInt(request.getParameter("id"));
+            int id = Integer.parseInt(
+                    request.getParameter("id"));
 
             employeeDAO.deleteEmployee(id);
+
+            request.getSession().setAttribute(
+                    "success",
+                    "Employee deleted successfully!"
+            );
 
             response.sendRedirect(
                     request.getContextPath() + "/employees");
@@ -65,9 +83,13 @@ public class EmployeeServlet extends HttpServlet {
         // Display Employees
         } else {
 
-            List<Employee> employees = employeeDAO.getAllEmployees();
+            List<Employee> employees =
+                    employeeDAO.getAllEmployees();
 
-            request.setAttribute("employees", employees);
+            request.setAttribute(
+                    "employees",
+                    employees
+            );
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/employees.jsp")
@@ -82,16 +104,80 @@ public class EmployeeServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        // Update Employee
+        // Common employee details
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String department =
+                request.getParameter("department");
+
+        /*
+         * EMAIL VALIDATION
+         */
+        if (email == null || email.trim().isEmpty()) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid email. Email cannot be empty."
+            );
+
+            return;
+        }
+
+        email = email.trim();
+
+        if (!Pattern.matches(EMAIL_PATTERN, email)) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid email format. Please enter a valid email."
+            );
+
+            return;
+        }
+
+        /*
+         * SALARY VALIDATION
+         */
+        String salaryValue =
+                request.getParameter("salary");
+
+        double salary;
+
+        try {
+
+            salary = Double.parseDouble(salaryValue);
+
+            if (salary < 0) {
+
+                showError(
+                        request,
+                        response,
+                        "Invalid salary. Salary cannot be negative."
+                );
+
+                return;
+            }
+
+        } catch (NumberFormatException e) {
+
+            showError(
+                    request,
+                    response,
+                    "Invalid salary. Please enter a valid number."
+            );
+
+            return;
+        }
+
+        /*
+         * UPDATE EMPLOYEE
+         */
         if ("update".equals(action)) {
 
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String department = request.getParameter("department");
-            double salary = Double.parseDouble(
-                    request.getParameter("salary"));
+            int id = Integer.parseInt(
+                    request.getParameter("id"));
 
             Employee employee = new Employee();
 
@@ -103,14 +189,15 @@ public class EmployeeServlet extends HttpServlet {
 
             employeeDAO.updateEmployee(employee);
 
-        // Add Employee
-        } else {
+            request.getSession().setAttribute(
+                    "success",
+                    "Employee updated successfully!"
+            );
 
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String department = request.getParameter("department");
-            double salary = Double.parseDouble(
-                    request.getParameter("salary"));
+        /*
+         * ADD EMPLOYEE
+         */
+        } else {
 
             Employee employee = new Employee();
 
@@ -120,9 +207,38 @@ public class EmployeeServlet extends HttpServlet {
             employee.setSalary(salary);
 
             employeeDAO.addEmployee(employee);
+
+            request.getSession().setAttribute(
+                    "success",
+                    "Employee added successfully!"
+            );
         }
 
         response.sendRedirect(
                 request.getContextPath() + "/employees");
+    }
+
+    // Display validation error
+    private void showError(HttpServletRequest request,
+                            HttpServletResponse response,
+                            String message)
+            throws ServletException, IOException {
+
+        request.setAttribute(
+                "error",
+                message
+        );
+
+        List<Employee> employees =
+                employeeDAO.getAllEmployees();
+
+        request.setAttribute(
+                "employees",
+                employees
+        );
+
+        request.getRequestDispatcher(
+                "/WEB-INF/views/employees.jsp")
+               .forward(request, response);
     }
 }

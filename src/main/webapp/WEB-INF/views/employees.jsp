@@ -19,15 +19,57 @@
 
     <h1>Employee Management System</h1>
 
+    <!-- Success Message -->
+
+    <%
+        String success =
+                (String) session.getAttribute("success");
+
+        if (success != null) {
+    %>
+
+        <p style="color: green; font-weight: bold;">
+            <%= success %>
+        </p>
+
+    <%
+            session.removeAttribute("success");
+        }
+    %>
+
+
+    <!-- Error Message -->
+
+    <%
+        String error =
+                (String) request.getAttribute("error");
+
+        if (error != null) {
+    %>
+
+        <p style="color: red; font-weight: bold;">
+            <%= error %>
+        </p>
+
+    <%
+        }
+    %>
+
+
     <!-- Logout -->
 
     <p>
+
         <a href="${pageContext.request.contextPath}/logout">
+
             Logout
+
         </a>
+
     </p>
 
     <hr>
+
 
     <!-- Add Employee -->
 
@@ -44,6 +86,7 @@
 
         <br><br>
 
+
         <label>Email:</label>
 
         <input type="email"
@@ -51,6 +94,7 @@
                required>
 
         <br><br>
+
 
         <label>Department:</label>
 
@@ -60,22 +104,28 @@
 
         <br><br>
 
+
         <label>Salary:</label>
 
         <input type="number"
                name="salary"
                step="0.01"
+               min="0"
                required>
 
         <br><br>
 
+
         <button type="submit">
+
             Add Employee
+
         </button>
 
     </form>
 
     <hr>
+
 
     <!-- Employee List -->
 
@@ -88,38 +138,57 @@
             <tr>
 
                 <th>ID</th>
+
                 <th>Name</th>
+
                 <th>Email</th>
+
                 <th>Department</th>
+
                 <th>Salary</th>
+
                 <th>Action</th>
 
             </tr>
 
         </thead>
 
+
         <tbody>
 
-            <c:forEach var="employee" items="${employees}">
+            <c:forEach var="employee"
+                       items="${employees}">
 
                 <tr>
 
-                    <td>${employee.id}</td>
+                    <td>
+                        ${employee.id}
+                    </td>
 
-                    <td>${employee.name}</td>
+                    <td>
+                        ${employee.name}
+                    </td>
 
-                    <td>${employee.email}</td>
+                    <td>
+                        ${employee.email}
+                    </td>
 
-                    <td>${employee.department}</td>
+                    <td>
+                        ${employee.department}
+                    </td>
 
-                    <td>${employee.salary}</td>
+                    <td>
+                        ${employee.salary}
+                    </td>
 
                     <td>
 
                         <!-- Edit -->
 
                         <a href="${pageContext.request.contextPath}/employees?action=edit&id=${employee.id}">
+
                             Edit
+
                         </a>
 
                         |
@@ -127,8 +196,11 @@
                         <!-- Delete -->
 
                         <a href="${pageContext.request.contextPath}/employees?action=delete&id=${employee.id}"
+
                            onclick="return confirm('Are you sure you want to delete this employee?');">
+
                             Delete
+
                         </a>
 
                     </td>
