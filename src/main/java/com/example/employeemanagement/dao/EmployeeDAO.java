@@ -10,6 +10,7 @@ import com.example.employeemanagement.model.Employee;
 
 public class EmployeeDAO {
 
+    // Get all employees
     public List<Employee> getAllEmployees() {
 
         List<Employee> employees = new ArrayList<>();
@@ -38,5 +39,30 @@ public class EmployeeDAO {
         }
 
         return employees;
+    }
+
+    // Add new employee
+    public boolean addEmployee(Employee employee) {
+
+        String sql = "INSERT INTO employee " +
+                     "(name, email, department, salary) " +
+                     "VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, employee.getName());
+            statement.setString(2, employee.getEmail());
+            statement.setString(3, employee.getDepartment());
+            statement.setDouble(4, employee.getSalary());
+
+            int rowsInserted = statement.executeUpdate();
+
+            return rowsInserted > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
