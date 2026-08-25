@@ -29,6 +29,7 @@ public class EmployeeServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
+        // Edit Employee
         if ("edit".equals(action)) {
 
             int id = Integer.parseInt(request.getParameter("id"));
@@ -38,6 +39,7 @@ public class EmployeeServlet extends HttpServlet {
             Employee selectedEmployee = null;
 
             for (Employee employee : employees) {
+
                 if (employee.getId() == id) {
                     selectedEmployee = employee;
                     break;
@@ -46,16 +48,29 @@ public class EmployeeServlet extends HttpServlet {
 
             request.setAttribute("employee", selectedEmployee);
 
-            request.getRequestDispatcher("/WEB-INF/views/edit-employee.jsp")
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/edit-employee.jsp")
                    .forward(request, response);
 
+        // Delete Employee
+        } else if ("delete".equals(action)) {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            employeeDAO.deleteEmployee(id);
+
+            response.sendRedirect(
+                    request.getContextPath() + "/employees");
+
+        // Display Employees
         } else {
 
             List<Employee> employees = employeeDAO.getAllEmployees();
 
             request.setAttribute("employees", employees);
 
-            request.getRequestDispatcher("/WEB-INF/views/employees.jsp")
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/employees.jsp")
                    .forward(request, response);
         }
     }
@@ -67,13 +82,16 @@ public class EmployeeServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
+        // Update Employee
         if ("update".equals(action)) {
 
             int id = Integer.parseInt(request.getParameter("id"));
+
             String name = request.getParameter("name");
             String email = request.getParameter("email");
             String department = request.getParameter("department");
-            double salary = Double.parseDouble(request.getParameter("salary"));
+            double salary = Double.parseDouble(
+                    request.getParameter("salary"));
 
             Employee employee = new Employee();
 
@@ -85,12 +103,14 @@ public class EmployeeServlet extends HttpServlet {
 
             employeeDAO.updateEmployee(employee);
 
+        // Add Employee
         } else {
 
             String name = request.getParameter("name");
             String email = request.getParameter("email");
             String department = request.getParameter("department");
-            double salary = Double.parseDouble(request.getParameter("salary"));
+            double salary = Double.parseDouble(
+                    request.getParameter("salary"));
 
             Employee employee = new Employee();
 
@@ -102,6 +122,7 @@ public class EmployeeServlet extends HttpServlet {
             employeeDAO.addEmployee(employee);
         }
 
-        response.sendRedirect(request.getContextPath() + "/employees");
+        response.sendRedirect(
+                request.getContextPath() + "/employees");
     }
 }

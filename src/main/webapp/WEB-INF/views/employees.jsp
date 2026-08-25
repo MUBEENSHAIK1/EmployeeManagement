@@ -109,8 +109,19 @@
 
                     <td>
 
+                        <!-- Edit -->
+
                         <a href="${pageContext.request.contextPath}/employees?action=edit&id=${employee.id}">
                             Edit
+                        </a>
+
+                        |
+
+                        <!-- Delete -->
+
+                        <a href="${pageContext.request.contextPath}/employees?action=delete&id=${employee.id}"
+                           onclick="return confirm('Are you sure you want to delete this employee?');">
+                            Delete
                         </a>
 
                     </td>

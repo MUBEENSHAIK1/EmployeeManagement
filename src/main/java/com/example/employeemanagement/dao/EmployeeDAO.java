@@ -91,4 +91,24 @@ public class EmployeeDAO {
             return false;
         }
     }
+    
+ // Delete employee
+    public boolean deleteEmployee(int id) {
+
+        String sql = "DELETE FROM employee WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            int rowsDeleted = statement.executeUpdate();
+
+            return rowsDeleted > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
