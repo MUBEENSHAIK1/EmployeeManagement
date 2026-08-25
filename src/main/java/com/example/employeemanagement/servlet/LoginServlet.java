@@ -3,17 +3,16 @@ package com.example.employeemanagement.servlet;
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+
         System.out.println("LoginServlet initialized");
     }
 
@@ -22,7 +21,8 @@ public class LoginServlet extends HttpServlet {
                           HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getRequestDispatcher("/WEB-INF/views/login.jsp")
+        request.getRequestDispatcher(
+                "/WEB-INF/views/login.jsp")
                .forward(request, response);
     }
 
@@ -34,9 +34,12 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if ("admin".equals(username) && "admin123".equals(password)) {
+        // Validate login credentials
+        if ("admin".equals(username)
+                && "admin123".equals(password)) {
 
             HttpSession session = request.getSession();
+
             session.setAttribute("username", username);
 
             response.sendRedirect(
@@ -44,8 +47,10 @@ public class LoginServlet extends HttpServlet {
 
         } else {
 
+            // Send error message back to login page
             request.setAttribute(
-                    "error", "Invalid username or password");
+                    "error",
+                    "Invalid username or password");
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/login.jsp")
@@ -55,6 +60,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void destroy() {
+
         System.out.println("LoginServlet destroyed");
     }
 }
