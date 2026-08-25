@@ -4,9 +4,13 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <meta charset="UTF-8">
+
     <title>Employee Management - Home</title>
+
 </head>
 
 <body>
@@ -22,11 +26,39 @@
     <h3>Employee Management</h3>
 
     <ul>
-        <li>View Employees</li>
-        <li>Add Employee</li>
-        <li>Update Employee</li>
-        <li>Delete Employee</li>
+
+        <li>
+            <a href="${pageContext.request.contextPath}/employees">
+                View Employees
+            </a>
+        </li>
+
+        <li>
+            <a href="${pageContext.request.contextPath}/employees">
+                Add Employee
+            </a>
+        </li>
+
+        <li>
+            <a href="${pageContext.request.contextPath}/employees">
+                Update Employee
+            </a>
+        </li>
+
+        <li>
+            <a href="${pageContext.request.contextPath}/employees">
+                Delete Employee
+            </a>
+        </li>
+
     </ul>
 
+    <hr>
+
+    <a href="${pageContext.request.contextPath}/logout">
+        Logout
+    </a>
+
 </body>
+
 </html>

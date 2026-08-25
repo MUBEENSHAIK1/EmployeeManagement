@@ -19,6 +19,16 @@
 
     <h1>Employee Management System</h1>
 
+    <!-- Logout -->
+
+    <p>
+        <a href="${pageContext.request.contextPath}/logout">
+            Logout
+        </a>
+    </p>
+
+    <hr>
+
     <!-- Add Employee -->
 
     <h2>Add Employee</h2>
@@ -59,7 +69,9 @@
 
         <br><br>
 
-        <button type="submit">Add Employee</button>
+        <button type="submit">
+            Add Employee
+        </button>
 
     </form>
 
@@ -76,15 +88,10 @@
             <tr>
 
                 <th>ID</th>
-
                 <th>Name</th>
-
                 <th>Email</th>
-
                 <th>Department</th>
-
                 <th>Salary</th>
-
                 <th>Action</th>
 
             </tr>
