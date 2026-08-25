@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
+import com.example.employeemanagement.servlet.EmployeeServlet;
 import com.example.employeemanagement.servlet.HomeServlet;
 import com.example.employeemanagement.servlet.LoginServlet;
 
@@ -33,6 +34,17 @@ public class EmployeeManagementApplication {
                 new ServletRegistrationBean<>(new HomeServlet(), "/home");
 
         registration.setName("HomeServlet");
+
+        return registration;
+    }
+
+    @Bean
+    public ServletRegistrationBean<EmployeeServlet> employeeServlet() {
+
+        ServletRegistrationBean<EmployeeServlet> registration =
+                new ServletRegistrationBean<>(new EmployeeServlet(), "/employees");
+
+        registration.setName("EmployeeServlet");
 
         return registration;
     }
