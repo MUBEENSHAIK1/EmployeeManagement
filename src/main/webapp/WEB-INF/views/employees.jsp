@@ -13,11 +13,54 @@
 
     <title>Employee Management - Employees</title>
 
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/style.css">
+
 </head>
 
 <body>
 
-    <h1>Employee Management System</h1>
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1>Employee Management System</h1>
+
+        <p>
+            Manage employee records
+        </p>
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <div class="navbar">
+
+        <div>
+
+            <a href="${pageContext.request.contextPath}/home">
+                Home
+            </a>
+
+            <a href="${pageContext.request.contextPath}/employees">
+                Employees
+            </a>
+
+        </div>
+
+        <div>
+
+            <a href="${pageContext.request.contextPath}/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
 
     <!-- Success Message -->
 
@@ -28,9 +71,11 @@
         if (success != null) {
     %>
 
-        <p style="color: green; font-weight: bold;">
+        <div class="success-message">
+
             <%= success %>
-        </p>
+
+        </div>
 
     <%
             session.removeAttribute("success");
@@ -47,177 +92,235 @@
         if (error != null) {
     %>
 
-        <p style="color: red; font-weight: bold;">
+        <div class="error-message">
+
             <%= error %>
-        </p>
+
+        </div>
 
     <%
         }
     %>
 
 
-    <!-- Logout -->
-
-    <p>
-
-        <a href="${pageContext.request.contextPath}/logout">
-
-            Logout
-
-        </a>
-
-    </p>
-	
-	<p>
-	    <a href="${pageContext.request.contextPath}/home">
-	        ← Back to Home
-	    </a>
-	</p>
-
-    <hr>
-
-
     <!-- Add Employee -->
 
-    <h2>Add Employee</h2>
+    <div class="card">
 
-    <form action="${pageContext.request.contextPath}/employees"
-          method="post">
+        <h2>Add Employee</h2>
 
-        <label>Name:</label>
+        <form action="${pageContext.request.contextPath}/employees"
+              method="post">
 
-        <input type="text"
-               name="name"
-               required>
+            <div class="form-group">
 
-        <br><br>
+                <label for="name">
+                    Name
+                </label>
 
+                <input type="text"
+                       id="name"
+                       name="name"
+                       placeholder="Enter employee name"
+                       required>
 
-        <label>Email:</label>
-
-        <input type="email"
-               name="email"
-               required>
-
-        <br><br>
-
-
-        <label>Department:</label>
-
-        <input type="text"
-               name="department"
-               required>
-
-        <br><br>
+            </div>
 
 
-        <label>Salary:</label>
+            <div class="form-group">
 
-        <input type="number"
-               name="salary"
-               step="0.01"
-               min="0"
-               required>
+                <label for="email">
+                    Email
+                </label>
 
-        <br><br>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="Enter email address"
+                       required>
+
+            </div>
 
 
-        <button type="submit">
+            <div class="form-group">
 
-            Add Employee
+                <label for="department">
+                    Department
+                </label>
 
-        </button>
+                <input type="text"
+                       id="department"
+                       name="department"
+                       placeholder="Enter department"
+                       required>
 
-    </form>
+            </div>
 
-    <hr>
+
+            <div class="form-group">
+
+                <label for="salary">
+                    Salary
+                </label>
+
+                <input type="number"
+                       id="salary"
+                       name="salary"
+                       placeholder="Enter salary"
+                       step="0.01"
+                       min="0"
+                       required>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                + Add Employee
+
+            </button>
+
+        </form>
+
+    </div>
 
 
     <!-- Employee List -->
 
-    <h2>Employee List</h2>
+    <div class="card">
 
-    <table border="1" cellpadding="10">
+        <h2>Employee List</h2>
 
-        <thead>
+        <c:choose>
 
-            <tr>
+            <c:when test="${not empty employees}">
 
-                <th>ID</th>
+                <table class="employee-table">
 
-                <th>Name</th>
+                    <thead>
 
-                <th>Email</th>
+                        <tr>
 
-                <th>Department</th>
+                            <th>ID</th>
 
-                <th>Salary</th>
+                            <th>Name</th>
 
-                <th>Action</th>
+                            <th>Email</th>
 
-            </tr>
+                            <th>Department</th>
 
-        </thead>
+                            <th>Salary</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
 
 
-        <tbody>
+                    <tbody>
 
-            <c:forEach var="employee"
-                       items="${employees}">
+                        <c:forEach var="employee"
+                                   items="${employees}">
 
-                <tr>
+                            <tr>
 
-                    <td>
-                        ${employee.id}
-                    </td>
+                                <td>
+                                    ${employee.id}
+                                </td>
 
-                    <td>
-                        ${employee.name}
-                    </td>
+                                <td>
+                                    ${employee.name}
+                                </td>
 
-                    <td>
-                        ${employee.email}
-                    </td>
+                                <td>
+                                    ${employee.email}
+                                </td>
 
-                    <td>
-                        ${employee.department}
-                    </td>
+                                <td>
+                                    ${employee.department}
+                                </td>
 
-                    <td>
-                        ${employee.salary}
-                    </td>
+                                <td>
+                                    ₹${employee.salary}
+                                </td>
 
-                    <td>
+                                <td>
 
-                        <!-- Edit -->
+                                    <div class="action-buttons">
 
-                        <a href="${pageContext.request.contextPath}/employees?action=edit&id=${employee.id}">
+                                        <!-- Edit -->
 
-                            Edit
+                                        <a href="${pageContext.request.contextPath}/employees?action=edit&id=${employee.id}"
+                                           class="btn btn-primary">
 
-                        </a>
+                                            Edit
 
-                        |
+                                        </a>
 
-                        <!-- Delete -->
 
-                        <a href="${pageContext.request.contextPath}/employees?action=delete&id=${employee.id}"
+                                        <!-- Delete -->
 
-                           onclick="return confirm('Are you sure you want to delete this employee?');">
+                                        <a href="${pageContext.request.contextPath}/employees?action=delete&id=${employee.id}"
+                                           class="btn btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this employee?');">
 
-                            Delete
+                                            Delete
 
-                        </a>
+                                        </a>
 
-                    </td>
+                                    </div>
 
-                </tr>
+                                </td>
 
-            </c:forEach>
+                            </tr>
 
-        </tbody>
+                        </c:forEach>
 
-    </table>
+                    </tbody>
+
+                </table>
+
+            </c:when>
+
+
+            <c:otherwise>
+
+                <p>
+                    No employees found.
+                </p>
+
+            </c:otherwise>
+
+        </c:choose>
+
+    </div>
+
+
+    <!-- Navigation Buttons -->
+
+    <div style="margin-top: 20px;">
+
+        <a href="${pageContext.request.contextPath}/home"
+           class="btn btn-secondary">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+
+    <!-- Footer -->
+
+    <div class="footer">
+
+        Employee Management System
+
+    </div>
+
+</div>
 
 </body>
 
