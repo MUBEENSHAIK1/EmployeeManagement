@@ -11,56 +11,94 @@
 
     <title>Employee Management - Login</title>
 
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/style.css">
+
 </head>
 
 <body>
 
-    <h2>Employee Management System</h2>
+    <div class="login-container">
 
-    <h3>Login</h3>
+        <div class="login-card">
 
-    <!-- Display Login Error -->
+            <h2>Employee Management System</h2>
 
-    <%
-        String error = (String) request.getAttribute("error");
+            <p class="subtitle">
+                Sign in to continue
+            </p>
 
-        if (error != null) {
-    %>
+            <!-- Display Login Error -->
 
-        <p style="color: red;">
-            <%= error %>
-        </p>
+            <%
+                String error =
+                        (String) request.getAttribute("error");
 
-    <%
-        }
-    %>
+                if (error != null) {
+            %>
 
-    <!-- Login Form -->
+                <div class="error-message">
+                    <%= error %>
+                </div>
 
-    <form action="${pageContext.request.contextPath}/login"
-          method="post">
+            <%
+                }
+            %>
 
-        <label>Username:</label>
+            <!-- Login Form -->
 
-        <input type="text"
-               name="username"
-               required>
+            <form action="${pageContext.request.contextPath}/login"
+                  method="post">
 
-        <br><br>
+                <div class="form-group">
 
-        <label>Password:</label>
+                    <label for="username">
+                        Username
+                    </label>
 
-        <input type="password"
-               name="password"
-               required>
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           placeholder="Enter username"
+                           required>
 
-        <br><br>
+                </div>
 
-        <button type="submit">
-            Login
-        </button>
 
-    </form>
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           placeholder="Enter password"
+                           required>
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        style="width: 100%;">
+
+                    Login
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="footer">
+
+            Employee Management System
+
+        </div>
+
+    </div>
 
 </body>
 
