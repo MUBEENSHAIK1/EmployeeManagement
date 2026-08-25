@@ -2,9 +2,11 @@ package com.example.employeemanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
+import com.example.employeemanagement.filter.AuthenticationFilter;
 import com.example.employeemanagement.servlet.EmployeeServlet;
 import com.example.employeemanagement.servlet.HomeServlet;
 import com.example.employeemanagement.servlet.LoginServlet;
@@ -15,10 +17,12 @@ public class EmployeeManagementApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(EmployeeManagementApplication.class, args);
+        SpringApplication.run(
+                EmployeeManagementApplication.class, args);
 
     }
 
+    // Login Servlet
     @Bean
     public ServletRegistrationBean<LoginServlet> loginServlet() {
 
@@ -33,6 +37,7 @@ public class EmployeeManagementApplication {
         return registration;
     }
 
+    // Home Servlet
     @Bean
     public ServletRegistrationBean<HomeServlet> homeServlet() {
 
@@ -47,6 +52,7 @@ public class EmployeeManagementApplication {
         return registration;
     }
 
+    // Employee Servlet
     @Bean
     public ServletRegistrationBean<EmployeeServlet> employeeServlet() {
 
@@ -61,6 +67,7 @@ public class EmployeeManagementApplication {
         return registration;
     }
 
+    // Logout Servlet
     @Bean
     public ServletRegistrationBean<LogoutServlet> logoutServlet() {
 
@@ -71,6 +78,28 @@ public class EmployeeManagementApplication {
                 );
 
         registration.setName("LogoutServlet");
+
+        return registration;
+    }
+
+    // Authentication Filter
+    @Bean
+    public FilterRegistrationBean<AuthenticationFilter>
+            authenticationFilter() {
+
+        FilterRegistrationBean<AuthenticationFilter> registration =
+                new FilterRegistrationBean<>();
+
+        registration.setFilter(new AuthenticationFilter());
+
+        registration.addUrlPatterns(
+                "/home",
+                "/employees"
+        );
+
+        registration.setName("AuthenticationFilter");
+
+        registration.setOrder(1);
 
         return registration;
     }
