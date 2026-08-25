@@ -67,6 +67,12 @@
         </a>
 
     </p>
+	
+	<p>
+	    <a href="${pageContext.request.contextPath}/home">
+	        ← Back to Home
+	    </a>
+	</p>
 
     <hr>
 
